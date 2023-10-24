@@ -5,6 +5,7 @@ from app import app, db
 from app.forms import LoginForm, RegistrationForm, EventForm
 from app.models import User, Event, Enrollment
 from sqlalchemy import func
+from sqlalchemy.sql import alias
 import sqlite3
 
 #appName = 'My global appName TVINING'
@@ -115,24 +116,53 @@ def userEvents():
 @app.route('/user-enrollments', methods=['GET', 'POST', 'UPDATE'])
 def userEnrollments():
     global appName, appSlogan, appTitle, db
+    user_id = current_user.id
+    userEnrollmentsAlias = alias(Enrollment)
     userEnrollments = db.session.query(
+        Enrollment.id, 
         Event.title,
         Event.date,
         User.username.label('owner'),
-        func.count(Enrollment.user_id).label('participants')
-    ).outerjoin(Enrollment, Event.id == Enrollment.event_id
-    ).outerjoin(User, User.id == Event.user_id
-    ).group_by(Event.user_id, Event.date
-    ).order_by(
-         func.count(Enrollment.user_id).label('participants').desc(),
-         Event.title
+        func.count(userEnrollmentsAlias.c.user_id).label('participants')
+    ).outerjoin(User, User.id == Enrollment.user_id
+    ).outerjoin(Event, Enrollment.event_id == Event.id
+    ).outerjoin(userEnrollmentsAlias, Enrollment.event_id == userEnrollmentsAlias.c.event_id
+    ).group_by(Enrollment.id, Event.title, Event.date, User.username
+    ).filter(Enrollment.user_id == user_id               
     ).all()
+
     return render_template(
         'user-enrollments.html',
         appName=appName,
         appTitle=appTitle,
         appSlogan=appSlogan,
         userEnrollments=userEnrollments)
+
+@app.route('/user-enrollments', methods=['GET', 'POST', 'UPDATE'])
+def Enrollments():
+    global appName, appSlogan, appTitle, db
+    user_id = current_user.id
+    userEnrollmentsAlias = alias(Enrollment)
+    userEnrollments = db.session.query(
+        Enrollment.id, 
+        Event.title,
+        Event.date,
+        User.username.label('owner'),
+        func.count(userEnrollmentsAlias.c.user_id).label('participants')
+    ).outerjoin(User, User.id == Enrollment.user_id
+    ).outerjoin(Event, Enrollment.event_id == Event.id
+    ).outerjoin(userEnrollmentsAlias, Enrollment.event_id == userEnrollmentsAlias.c.event_id
+    ).group_by(Enrollment.id, Event.title, Event.date, User.username             
+    ).all()
+
+    return render_template(
+        'user-enrollments.html',
+        appName=appName,
+        appTitle=appTitle,
+        appSlogan=appSlogan,
+        userEnrollments=userEnrollments)
+
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
