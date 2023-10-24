@@ -19,8 +19,12 @@
                     <tr>
                         <td>{{ event.title }}</td>
                         <td>{{ event.owner }}</td>
-                        <td>{{ event.date }}</td>                        
-                        <th><a href="{{ url_for('index') }}" aria-pressed="true">{{ event.participants }}</a></th>
+                        <td>{{ event.date }}</td>
+                        {% if event.participants > 0 %}
+                        <td><a href="{{ url_for('eventEnrollments') }}/{{event.id}}" aria-pressed="true">{{ event.participants }}</a></td>
+                        {% else %}
+                        <td>{{ event.participants }}</td>
+                    {% endif %}                        
                         <td>
                             <a href="{{ url_for('event') }}/{{event.id}}" class="btn btn-primary btn-sm active" role="button" aria-pressed="true">Modify</a>
                             <a href="{{ url_for('event') }}" class="btn btn-primary btn-sm active" role="button" aria-pressed="true" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="{{event.id}}" >Delete {{ event.id }}</a>

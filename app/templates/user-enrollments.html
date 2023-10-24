@@ -19,7 +19,7 @@
                         <td>{{ enrollment.title }}</td>
                         <td>{{ enrollment.date }}</td>
                         <td>{{ enrollment.owner }}</td>
-                        <th><a href="{{ url_for('index') }}" aria-pressed="true">{{ enrollment.participants }}</a></th>
+                        <td><a href="{{ url_for('eventEnrollments') }}/{{enrollment.eventId}}" aria-pressed="true">{{ enrollment.participants }}</a></td>
                         <td>                            
                             <a href="{{ url_for('index') }}" class="btn btn-primary btn-sm active" role="button" aria-pressed="true">Delete</a>
                         </td>

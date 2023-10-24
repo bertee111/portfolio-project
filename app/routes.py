@@ -80,27 +80,35 @@ def event(event_id=0):
 def userEvents():
     global appName, appSlogan, appTitle, db
     user_id = current_user.id
-  
+    
+    # WORK for debug only...
+    # conn = get_db_connection()
+    #userEvents = conn.execute('SELECT * FROM event').fetchall()
+    #sql = 'select u.email, e.title, e.date, er.user_id, er.event_id, u2.email as enrollMail from event e left join user u on e.user_id = u.id left join enrollment er on e.id = er.event_id left join user u2 on er.user_id = u2.id'
+    #sql = 'select e.title, u.email, er.user_id, er.event_id, u2.email as enrollMail from event e left join user u on e.user_id = u.id left join enrollment er on e.id = er.event_id left join user u2 on er.user_id = u2.id'
+    #sql = 'select u.email, e.title, e.date, count(e.user_id) as participant, sum(CASE WHEN er.id IS NOT NULL THEN 1 ELSE 0 END) as participants from event e join user u on e.user_id = u.id left join enrollment er on e.id = er.event_id left join user u2 on er.user_id = u2.id group by e.title, e.date'
+    #userEvents = conn.execute(sql).fetchall()
+    #conn.close()
+    #return render_template('user-events.html', appName=appName, appTitle=appTitle, appSlogan=appSlogan, userEvents=userEvents )
+
     userEvents = db.session.query(
         Event.user_id,
         Event.id,
         User.username.label("owner"),
         Event.date,
-        Event.title,
+        Event.title,        
         func.count(Enrollment.user_id).label('participants')
     ).outerjoin(User, Event.user_id == User.id
     ).outerjoin(Enrollment, Event.id == Enrollment.event_id
     ).filter(
-        Enrollment.user_id == user_id
+        Event.user_id == user_id
     ).group_by(
         Event.user_id,
-        Event.id,
-        User.username,
         Event.date,
         Event.title
-    ).order_by(
-        func.count(Enrollment.user_id).desc(),
-        Event.title
+     ).order_by(
+         func.count(Enrollment.user_id).label('participants').desc(),
+         Event.title
     ).all()
 
     return render_template(
@@ -109,7 +117,7 @@ def userEvents():
         appTitle=appTitle, 
         appSlogan=appSlogan, 
         userEvents=userEvents 
-    )    
+    ) 
 
     
 
@@ -122,12 +130,13 @@ def userEnrollments():
         Enrollment.id, 
         Event.title,
         Event.date,
+        Event.id.label('eventId'),
         User.username.label('owner'),
         func.count(userEnrollmentsAlias.c.user_id).label('participants')
     ).outerjoin(User, User.id == Enrollment.user_id
     ).outerjoin(Event, Enrollment.event_id == Event.id
     ).outerjoin(userEnrollmentsAlias, Enrollment.event_id == userEnrollmentsAlias.c.event_id
-    ).group_by(Enrollment.id, Event.title, Event.date, User.username
+    ).group_by(Enrollment.id, Event.title, Event.date, Event.id, User.username
     ).filter(Enrollment.user_id == user_id               
     ).all()
 
@@ -138,29 +147,32 @@ def userEnrollments():
         appSlogan=appSlogan,
         userEnrollments=userEnrollments)
 
-@app.route('/user-enrollments', methods=['GET', 'POST', 'UPDATE'])
-def Enrollments():
+
+@app.route('/event-enrollment', methods=['GET'])
+@app.route('/event-enrollment/<event_id>', methods=['GET'])
+@login_required
+def eventEnrollments(event_id=0):
     global appName, appSlogan, appTitle, db
-    user_id = current_user.id
-    userEnrollmentsAlias = alias(Enrollment)
-    userEnrollments = db.session.query(
+    eventEnrollments = db.session.query(
         Enrollment.id, 
         Event.title,
         Event.date,
-        User.username.label('owner'),
-        func.count(userEnrollmentsAlias.c.user_id).label('participants')
+        User.username.label('enroller'),
     ).outerjoin(User, User.id == Enrollment.user_id
     ).outerjoin(Event, Enrollment.event_id == Event.id
-    ).outerjoin(userEnrollmentsAlias, Enrollment.event_id == userEnrollmentsAlias.c.event_id
-    ).group_by(Enrollment.id, Event.title, Event.date, User.username             
+    ).filter(Event.id == event_id           
     ).all()
+    eventTitle = eventEnrollments[0].title
 
     return render_template(
-        'user-enrollments.html',
+        'event-enrollments.html',
         appName=appName,
         appTitle=appTitle,
         appSlogan=appSlogan,
-        userEnrollments=userEnrollments)
+        eventTitle=eventTitle,
+        eventEnrollments=eventEnrollments,
+        )
+
 
 
 
