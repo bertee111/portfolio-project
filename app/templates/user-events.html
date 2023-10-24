@@ -1,0 +1,83 @@
+{% extends "home.html" %}
+
+{% block content %}
+    <h2>My events : <a href="{{ url_for('event') }}" class="btn btn-primary btn-sm active" role="button" aria-pressed="true">Add</a></h2>
+   
+
+        <table class="table table-dark table-hover table-striped">
+            <thead>
+            <tr>
+                <th>Event</th>
+                <th>Owner</th>
+                <th>Date</th>
+                <th>Participants</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+                {% for event in userEvents %}
+                    <tr>
+                        <td>{{ event.title }}</td>
+                        <td>{{ event.owner }}</td>
+                        <td>{{ event.date }}</td>                        
+                        <th><a href="{{ url_for('index') }}" aria-pressed="true">{{ event.participants }}</a></th>
+                        <td>
+                            <a href="{{ url_for('event') }}/{{event.id}}" class="btn btn-primary btn-sm active" role="button" aria-pressed="true">Modify</a>
+                            <a href="{{ url_for('event') }}" class="btn btn-primary btn-sm active" role="button" aria-pressed="true" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="{{event.id}}" >Delete {{ event.id }}</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Modal form -->
+        <form action="{{ url_for('event') }}" method="POST">
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Deleting an event !!!!</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to delete event id                        
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-primary">Yes</button>                    
+                    </div>
+                </div>
+                </div>
+                <input type="hidden" id="theEventId" name="theEventId" value="">
+                <input type="hidden" id="eventMethod" name="eventMethod" value="delete">
+
+            </div>
+        </form>
+
+        <!-- Modal js -->
+        <script>
+            var exampleModal = document.getElementById('exampleModal')
+            exampleModal.addEventListener('show.bs.modal', function (event) {
+                
+                // Button that triggered the modal
+                var button = event.relatedTarget
+                
+                // Extract info from data-bs-* attributes
+                var event = button.getAttribute('data-bs-whatever')
+                console.log('event id : ' + event)
+
+                // Update the modal's content.
+                var modalTitle = exampleModal.querySelector('.modal-body')
+                
+                // Update the input hidden value with event id                
+                var modalInputHidden = exampleModal.querySelector('#theEventId')
+                modalInputHidden.value = event;
+                console.log(modalInputHidden);
+
+                modalTitle.textContent = 'Event id : ' + event
+                
+            })            
+        </script>        
+
+
+{% endblock %}

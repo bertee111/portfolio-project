@@ -1,0 +1,138 @@
+======================
+INSTALLATION DU PROJET
+======================
+$ cd test
+$ git clone https://github.com/bertee111/portfolio.git
+$ python3 -m venv venv     # will create venv folder
+$ . venv/bin/activate
+$ pip install flask
+$ python3
+>>> import flask                    # ok aucun msg d'erreur all fine !!!
+exit()                              # return
+$ export FLASK_APP=microblog.py     # to be done each time you start terminal unless python-dotenv
+$ pip install flask-wtf             # manage les form
+$ pip install flask-sqlalchemy      # BD
+$ pip install flask-migrate         # manage les changement et évolution de BD
+$ pip install flask-login
+$ pip install email-validator
+$ pip list
+$ pip uninstall flask
+$ pip install flask==2.3.3
+$ pip uninstall Werkzeug
+$ pip install Werkzeug==2.3.7
+$ pip install python-dotenv==1.0.0
+$ flask --debug run
+=========================================================================
+$ flask db init                     # will create migrations directory
+$ flask db migrate -m "users and posts table" # just generates the migration script
+$ flask db upgrade                  # apply the changes to the database and create the app.db (sqlLite)
+
+=> REPO du projet : https://github.com/bertee111/portfolio
+=> REPO de Miguel : https://github.com/miguelgrinberg/microblog.git
+=> TUTO de Miguel : https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world
+=> FAVICON : https://favicon.io/emoji-favicons/mountain/
+=> BASE TEMPLATE : https://www.w3schools.com/bootstrap5/trybs_template1.htm
+=> mail account tvining.sys@gmail.com psw : Jmlg-2O23
+=> 2O23 avec la lettre O majuscule pas un zéro :)
+
+================================================
+Chaque fois qu'on redémare VSCODE
+$ pip install -r requirement.txt        # first time only pour recreer l'environnement virtuel
+$ . venv/bin/activate
+$ flask --debug run
+
+========
+Releases
+========
+V1 objective : Setup app
+(✓) V1- installation, framework flask, requirements, setup, venv, creation of database, etc
+(✓) V1- Home page connected
+(✓) V1- Home page not-connected
+(✓) V1- Login form + error message
+(✓) V1- Subscribing form + error message
+(✓) V1- template bootstrap-5
+--------------
+(✓) V2 - objective : getting all my events from DB for signed userid 2 (user-events)
+>> V2 - objective : getting all my enrollments from DB for signed userid 2 (user-enrollments)
+--------------
+V3 - objective : (adding an event for signed user) form event.html POST
+V3 - objective : (adding an enrollment for signed user) form enrollment.html POST
+Note : identique à register....
+--------------
+V4 - objective : (deleting an event) DELETE/UPDATE route : event/delete
+V4 - objective : (deleting an enrollment) DELETE/UPDATE route : enrollment/delete
+Note : pas vraiment besoin de form, directement via user-events & user-enrollments & refresh
+--------------
+
+
+
+
+
+? investiguer why constraint foreing key qui marche pas
+? retourner seulement les events du user log dans user-events/2
+? refaire la même chose mais pour http://127.0.0.1:5000/user-enrollments
+            'id':83774
+            'userId': 2
+            'eventId':234
+? jointure pour nombre de participant             
+? jointure sur user pour avoir owner name
+
+Formulaire ajout d'un event
+Action delete event avec 'are you sure' + message confirmation
+Formulaire modifier un event
+Formulaire ajout d'un enrollment
+Action delete enrollment avec 'are you sure' + message confirmation
+
+
+(?) add a template for user-events/2
+(?) route : GET http://127.0.0.1:5000/user-events/2
+(?) pre-fill data in db into user_events table for userid 2,3 etc
+
+--------------
+v3 objective : getting all enrollments from DB for signed userid 2
+(?) route : GET http://127.0.0.1:5000/user-enrollments/2
+(?) pre-fill data in db into user_enrollments table for userid 2
+{        
+            'id':83774
+            'userId': 2
+            'eventId':234
+            ref 'title': 'Meditate on the beach',
+            ref 'date': '2023-10-19',
+            ref 'ownerId':
+            ref 'owner': 'Ricardo',
+            ref 'participants': 22
+        }, etc
+
+------------------
+v4 objective : getting all participant for an event from DB for signed userid 2 event id 444
+(?) route : GET http://127.0.0.1:5000/event-enrollments/433
+(?) template & route for event-enrollments
+------------------
+
+
+
+
+
+
+
+
+more to come....
+vxxx- Post activity
+    user x 
+    interest y
+    date z
+    price
+    maximum of person for this activity
+    Language
+    Sexe    
+    Note
+v2- Display all current activity
+--------------
+v4- add/delete/update my my interest
+v4- Add a comment to a posted activity
+v4- Display my posted activity
+v4- Display activity for user x
+v4- Display all user who posted an activity
+v4- Display the most popular activity
+v4- Send a notification to all participated users for an activitie
+v4- Display all my participated activities

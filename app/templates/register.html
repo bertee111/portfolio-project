@@ -1,0 +1,37 @@
+{% extends "home.html" %}
+
+{% block content %}
+    <h2>Register</h2>
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <div class="mb-3 mt-3 w-50">
+            {{ form.username.label(class_='form-label') }}
+            {{ form.username(size=32, class_='form-control', placeholder='Enter username') }}
+            {% for error in form.username.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </div>
+        <div class="mb-3 w-50">
+            {{ form.email.label(class_='form-label') }}
+            {{ form.email(size=32, class_='form-control', placeholder='Enter email') }}
+            {% for error in form.email.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </div>
+        <div class="mb-3 w-50">
+            {{ form.password.label(class_='form-label') }}
+            {{ form.password(size=32, class_='form-control', placeholder='Enter password') }}
+            {% for error in form.password.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </div>
+        <div class="mb-3 w-50">
+            {{ form.password2.label(class_='form-label') }} 
+            {{ form.password2(size=32, class_='form-control', placeholder='Enter password') }}
+            {% for error in form.password2.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </div>
+        <button type="submit" name="submit" class="btn btn-primary" value="Sign In">Sign In</button>
+    </form>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends "home.html" %}
+
+{% block content %}
+<form action="" method="post">
+    {{ form.hidden_tag() }}
+    <div class="mb-3 mt-3 w-50">
+        {{ form.title.label(class_='form-label') }}
+        {{ form.title(size=32, class_='form-control', placeholder='Enter title') }}
+        {% for error in form.title.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+    </div>
+    <div class="mb-3 mt-3 w-50">
+        {{ form.date.label(class_='form-label') }}
+        {{ form.date(size=32, class_='form-control', placeholder='Enter date') }}
+        {% for error in form.date.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+    </div>
+    <button type="submit" name="submit" class="btn btn-primary" value="Sign In">Save</button>
+</form>
+
+
+
+
+    <h1>{{ appMsg }}</h1>
+{% endblock %}

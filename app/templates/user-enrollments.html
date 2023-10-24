@@ -1,0 +1,30 @@
+{% extends "home.html" %}
+
+{% block content %}
+    <h2>My enrollments : <button type="button" class="btn btn-primary btn-sm">Add</button></h2>    
+
+        <table class="table table-dark table-hover table-striped">
+            <thead>
+            <tr>
+                <th>Event</th>
+                <th>Date</th>                
+                <th>Owner</th>
+                <th>Participants</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+                {% for enrollment in userEnrollments %}
+                    <tr>
+                        <td>{{ enrollment.title }}</td>
+                        <td>{{ enrollment.date }}</td>
+                        <td>{{ enrollment.owner }}</td>
+                        <th><a href="{{ url_for('index') }}" aria-pressed="true">{{ enrollment.participants }}</a></th>
+                        <td>                            
+                            <a href="{{ url_for('index') }}" class="btn btn-primary btn-sm active" role="button" aria-pressed="true">Delete</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+{% endblock %}
