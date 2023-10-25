@@ -11,10 +11,6 @@ from wtforms.fields import DateField
 from datetime import timedelta, date, time, datetime
 
 
-#appName = 'My global appName TVINING'
-#appTitle = 'My global appTitle : ' + appName
-#appSlogan = 'My global appSlogan...to be or not to be'
-
 appName = 'TVINING'
 appTitle = 'Welcome to ' + appName
 appSlogan = 'A simple way to join with activities'
@@ -41,17 +37,6 @@ def get_db_connection():
     conn.row_factory = sqlite3.Row
     return conn
 
-#@user.route('/<user_id>', defaults={'username': default_value})
-#@user.route('/<user_id>/<username>')
-#def show(user_id, username):
-
-#@app.route("/<parameter>/<optional_parameter>")
-#@app.route("/<parameter>")
-#def route(parameter, optional_parameter="Default Value"):
-#    return parameter + " " + optional_parameter
-
-
-
 @app.route('/event', methods=['POST', 'GET'])
 @app.route('/event/<event_id>', methods=['POST', 'GET'])
 @login_required
@@ -67,6 +52,8 @@ def event(event_id=0):
             new_event = Event(title=form.title.data, date=form.date.data, user_id=current_user.id)
             db.session.add(new_event)
             db.session.commit()
+            flash('Event created successfully!', 'success')
+
             return redirect('/user-events')
         
         elif form_data['eventMethod'] == 'delete':
@@ -75,11 +62,11 @@ def event(event_id=0):
             event_to_delete = Event.query.filter(Event.id == event_id_to_delete).first()
             db.session.delete(event_to_delete)
             db.session.commit()
-            # enrollments_to_delete = Enrollment.query.filter(Enrollment.event_id == event_id_to_delete ).all()
-            # for enrollment in enrollments_to_delete:
-            #     db.session.delete(enrollment)
-            #     db.session.delete(event_to_delete)
-            #     db.session.commit()
+            enrollments_to_delete = Enrollment.query.filter(Enrollment.event_id == event_id_to_delete ).all()
+            for enrollment in enrollments_to_delete:
+                db.session.delete(enrollment)
+                db.session.delete(event_to_delete)
+                db.session.commit()
             return redirect('/user-events')
         elif event_id != 0:
             print('je update')
@@ -93,7 +80,6 @@ def event(event_id=0):
 
 
             return redirect('/user-events')
-            # return render_template('event.html',appName=appName, appTitle=appTitle, appSlogan=appSlogan, form=form)
 
     elif request.method == 'GET':
         if event_id == 0:
@@ -129,32 +115,9 @@ def event(event_id=0):
         # form.date.data = parsed_date
         # print(parsed_date)
         # print(currentEvent.id)
-    # print(request.test)
-    # if request.method == 'GET':
-    #     form = EventForm()
-    #     if form.validate_on_submit():
-    #         new_event = Event(title=form.title.data, date=form.date.data, user_id=current_user.id)
-    #         db.session.add(new_event)
-    #         db.session.commit()
-    #         flash('Event created successfully!', 'success')
-    #         return redirect(url_for('event.html'))  
-
-    #     return render_template('event.html',appName=appName, appTitle=appTitle, appSlogan=appSlogan, form=form)
-        # return render_template('event.html', appName=appName, appTitle=appTitle, appSlogan=appSlogan)
+   
 
 
-    # elif request.method == 'POST':
-    #     if form_data['eventMethod'] == 'delete':
-    #         print('je delete')
-    #         event_id_to_delete = form_data['theEventId']
-    #         event_to_delete = Event.query.filter(Event.id == event_id_to_delete).first()
-    #         enrollments_to_delete = Enrollment.query.filter(Enrollment.event_id == event_id_to_delete ).all()
-    #         for enrollment in enrollments_to_delete:
-    #             db.session.delete(enrollment)
-    #         db.session.delete(event_to_delete)
-    #         db.session.commit()
-    # return redirect('/user-events')
-    # return render_template('event.html', appName=appName, appTitle=appTitle, appSlogan=appSlogan, form=form)
 
 
 @app.route('/user-events', methods=['GET', 'POST', 'UPDATE'])
@@ -163,15 +126,6 @@ def userEvents():
     global appName, appSlogan, appTitle, db
     user_id = current_user.id
     
-    # WORK for debug only...
-    # conn = get_db_connection()
-    #userEvents = conn.execute('SELECT * FROM event').fetchall()
-    #sql = 'select u.email, e.title, e.date, er.user_id, er.event_id, u2.email as enrollMail from event e left join user u on e.user_id = u.id left join enrollment er on e.id = er.event_id left join user u2 on er.user_id = u2.id'
-    #sql = 'select e.title, u.email, er.user_id, er.event_id, u2.email as enrollMail from event e left join user u on e.user_id = u.id left join enrollment er on e.id = er.event_id left join user u2 on er.user_id = u2.id'
-    #sql = 'select u.email, e.title, e.date, count(e.user_id) as participant, sum(CASE WHEN er.id IS NOT NULL THEN 1 ELSE 0 END) as participants from event e join user u on e.user_id = u.id left join enrollment er on e.id = er.event_id left join user u2 on er.user_id = u2.id group by e.title, e.date'
-    #userEvents = conn.execute(sql).fetchall()
-    #conn.close()
-    #return render_template('user-events.html', appName=appName, appTitle=appTitle, appSlogan=appSlogan, userEvents=userEvents )
 
     userEvents = db.session.query(
         Event.user_id,
