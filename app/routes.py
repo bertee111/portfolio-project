@@ -53,7 +53,7 @@ def get_db_connection():
 
 
 @app.route('/event', methods=['POST', 'GET'])
-@app.route('/event/<event_id>', methods=['GET'])
+@app.route('/event/<event_id>', methods=['POST', 'GET'])
 @login_required
 def event(event_id=0):
     global appName, appSlogan, appTitle, db
@@ -62,7 +62,8 @@ def event(event_id=0):
     print(request)
 
     if request.method == 'POST':
-        if form_data['eventMethod'] == 'insert':
+        # if form_data['eventMethod'] == 'insert' and event_id == 0:
+        if event_id == 0 and form_data['eventMethod'] != 'delete':
             print('je insert')
             new_event = Event(title=form.title.data, date=form.date.data, user_id=current_user.id)
             db.session.add(new_event)
@@ -81,7 +82,11 @@ def event(event_id=0):
             #     db.session.delete(event_to_delete)
             #     db.session.commit()
             return redirect('/user-events')
-        
+        elif event_id != 0:
+            print('je update')
+            return redirect('/user-events')
+            # return render_template('event.html',appName=appName, appTitle=appTitle, appSlogan=appSlogan, form=form)
+
     elif request.method == 'GET':
         if event_id == 0:
             print('je get ajout')
