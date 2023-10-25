@@ -84,6 +84,14 @@ def event(event_id=0):
             return redirect('/user-events')
         elif event_id != 0:
             print('je update')
+            form = Event.query.get(event_id)
+            form.title = 'Fred Flinstone'
+            print(form)
+            db.session.commit()
+
+
+
+
             return redirect('/user-events')
             # return render_template('event.html',appName=appName, appTitle=appTitle, appSlogan=appSlogan, form=form)
 
