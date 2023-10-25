@@ -62,7 +62,6 @@ def event(event_id=0):
     print(request)
 
     if request.method == 'POST':
-        # if form_data['eventMethod'] == 'insert' and event_id == 0:
         if event_id == 0 and form_data['eventMethod'] != 'delete':
             print('je insert')
             new_event = Event(title=form.title.data, date=form.date.data, user_id=current_user.id)
@@ -85,8 +84,9 @@ def event(event_id=0):
         elif event_id != 0:
             print('je update')
             form = Event.query.get(event_id)
-            form.title = 'Fred Flinstone'
-            print(form)
+            print(request.form)
+            form.title = (request.form['title'])
+            print(request.form['title'])
             db.session.commit()
 
 
