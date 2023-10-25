@@ -21,8 +21,10 @@ insert into enrollment (user_id, event_id, date) values (2,6,'2023-10-23');
 insert into event (user_id, title, date) values (3,'patate4','2023-10-23');
 
 delete from event where id = 4
-delete from enrollment where id = 10
+delete from enrollment where event_id = 9
 
+delete * from event
+delete * from enrollment
 
 PRAGMA foreign_keys=1;
 insert into enrollment (user_id, event_id, date) values (2,14,'2023-10-23');
@@ -44,12 +46,12 @@ insert into event (user_id, title, date) values (3,'disco','2023-10-23');
 insert into event (user_id, title, date) values (3,'techno','2023-10-23');
 insert into event (user_id, title, date) values (3,'classical','2023-10-23');
 
-insert into enrollment (user_id, event_id, date) values (1,5,'2023-10-23');
-insert into enrollment (user_id, event_id, date) values (2,5,'2023-10-23');
-insert into enrollment (user_id, event_id, date) values (3,5,'2023-10-23');
-insert into enrollment (user_id, event_id, date) values (1,10,'2023-10-23');
-insert into enrollment (user_id, event_id, date) values (2,10,'2023-10-23');
-insert into enrollment (user_id, event_id, date) values (3,10,'2023-10-23');
+insert into enrollment (user_id, event_id, date) values (1,6,'2023-10-23');
+insert into enrollment (user_id, event_id, date) values (2,6,'2023-10-23');
+insert into enrollment (user_id, event_id, date) values (3,6,'2023-10-23');
+insert into enrollment (user_id, event_id, date) values (1,9,'2023-10-23');
+insert into enrollment (user_id, event_id, date) values (2,16,'2023-10-23');
+insert into enrollment (user_id, event_id, date) values (1,16,'2023-10-23');
 
 
 

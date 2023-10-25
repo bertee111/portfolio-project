@@ -7,6 +7,9 @@ from app.models import User, Event, Enrollment
 from sqlalchemy import func
 from sqlalchemy.sql import alias
 import sqlite3
+from wtforms.fields import DateField
+from datetime import timedelta, date, time, datetime
+
 
 #appName = 'My global appName TVINING'
 #appTitle = 'My global appTitle : ' + appName
@@ -54,36 +57,92 @@ def get_db_connection():
 @login_required
 def event(event_id=0):
     global appName, appSlogan, appTitle, db
-    if request.method == 'GET':
-        form = EventForm()
-        if form.validate_on_submit():
+    form = EventForm()
+    form_data = request.form
+    print(request)
+
+    if request.method == 'POST':
+        if form_data['eventMethod'] == 'insert':
+            print('je insert')
             new_event = Event(title=form.title.data, date=form.date.data, user_id=current_user.id)
             db.session.add(new_event)
             db.session.commit()
-            flash('Event created successfully!', 'success')
-            return redirect(url_for('event.html'))  
+            return redirect('/user-events')
+        
+        elif form_data['eventMethod'] == 'delete':
+            print('je delete')
+            event_id_to_delete = form_data['theEventId']
+            event_to_delete = Event.query.filter(Event.id == event_id_to_delete).first()
+            db.session.delete(event_to_delete)
+            db.session.commit()
+            # enrollments_to_delete = Enrollment.query.filter(Enrollment.event_id == event_id_to_delete ).all()
+            # for enrollment in enrollments_to_delete:
+            #     db.session.delete(enrollment)
+            #     db.session.delete(event_to_delete)
+            #     db.session.commit()
+            return redirect('/user-events')
+        
+    elif request.method == 'GET':
+        if event_id == 0:
+            print('je get ajout')
+        else:
+            print('je get update' + str(event_id))
+            currentEvent = db.session.query(
+            Event.user_id,
+            Event.id,
+            Event.date,
+            Event.title,        
+            ).filter(
+            Event.id == event_id
+            ).first()
+            form.title.data = currentEvent.title
+            print(currentEvent)
+        
 
         return render_template('event.html',appName=appName, appTitle=appTitle, appSlogan=appSlogan, form=form)
+
+
+        
+
+        # print(currentEvent)
+        # print(str(currentEvent.date))
+
+
+
+        # event_start_time = datetime(2023, 3, 1, 18, 15)
+        # formatted_date = event_start_time.strftime('%Y-%m-%d')
+        # parsed_date = datetime.strptime(formatted_date, '%Y-%m-%d')
+
+        # form.date.data = parsed_date
+        # print(parsed_date)
+        # print(currentEvent.id)
+    # print(request.test)
+    # if request.method == 'GET':
+    #     form = EventForm()
+    #     if form.validate_on_submit():
+    #         new_event = Event(title=form.title.data, date=form.date.data, user_id=current_user.id)
+    #         db.session.add(new_event)
+    #         db.session.commit()
+    #         flash('Event created successfully!', 'success')
+    #         return redirect(url_for('event.html'))  
+
+    #     return render_template('event.html',appName=appName, appTitle=appTitle, appSlogan=appSlogan, form=form)
         # return render_template('event.html', appName=appName, appTitle=appTitle, appSlogan=appSlogan)
 
+
     # elif request.method == 'POST':
-    #     form_data = request.form
     #     if form_data['eventMethod'] == 'delete':
-    #         event_to_delete = Event.query.filter(Event.id == form_data['theEventId']).first()
+    #         print('je delete')
+    #         event_id_to_delete = form_data['theEventId']
+    #         event_to_delete = Event.query.filter(Event.id == event_id_to_delete).first()
+    #         enrollments_to_delete = Enrollment.query.filter(Enrollment.event_id == event_id_to_delete ).all()
+    #         for enrollment in enrollments_to_delete:
+    #             db.session.delete(enrollment)
     #         db.session.delete(event_to_delete)
     #         db.session.commit()
     # return redirect('/user-events')
-    elif request.method == 'POST':
-        form_data = request.form
-        if form_data['eventMethod'] == 'delete':
-            event_id_to_delete = form_data['theEventId']
-            event_to_delete = Event.query.filter(Event.id == event_id_to_delete).first()
-            enrollments_to_delete = Enrollment.query.filter(Enrollment.event_id == event_id_to_delete ).all()
-            for enrollment in enrollments_to_delete:
-                db.session.delete(enrollment)
-            db.session.delete(event_to_delete)
-            db.session.commit()
-    return redirect('/user-events')
+    # return render_template('event.html', appName=appName, appTitle=appTitle, appSlogan=appSlogan, form=form)
+
 
 @app.route('/user-events', methods=['GET', 'POST', 'UPDATE'])
 @login_required
@@ -116,7 +175,7 @@ def userEvents():
         Event.user_id,
         Event.date,
         Event.title
-     ).order_by(
+    ).order_by(
          func.count(Enrollment.user_id).label('participants').desc(),
          Event.title
     ).all()
