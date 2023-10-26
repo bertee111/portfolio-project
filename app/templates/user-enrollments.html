@@ -22,9 +22,59 @@
                         <td><a href="{{ url_for('eventEnrollments') }}/{{enrollment.eventId}}" aria-pressed="true">{{ enrollment.participants }}</a></td>
                         <td>                            
                             <a href="{{ url_for('index') }}" class="btn btn-primary btn-sm active" role="button" aria-pressed="true">Delete</a>
+                            <a href="{{ url_for('index') }}" class="btn btn-primary btn-sm active" role="button" aria-pressed="true" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="{{enrollment.id}}" >Delete {{ enrollment.id }}</a>
+
                         </td>
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
+                <!-- Modal form -->
+                <form action="{{ url_for('enrollment') }}" method="POST">
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Deleting an enrollment !!!!</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                Are you sure you want to delete enrollment id                        
+                            </div>
+                            <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                            <button type="submit" class="btn btn-primary">Yes</button>                    
+                            </div>
+                        </div>
+                        </div>
+                        <input type="hidden" id="theEnrollmentId" name="theEnrollmentId" value="">
+                        <input type="hidden" id="enrollmenttMethod" name="enrollmentMethod" value="delete">
+        
+                    </div>
+                </form>
+        
+                <!-- Modal js -->
+                <script>
+                    var exampleModal = document.getElementById('exampleModal')
+                    exampleModal.addEventListener('show.bs.modal', function (enrollment) {
+                        
+                        // Button that triggered the modal
+                        var button = enrollment.relatedTarget
+                        
+                        // Extract info from data-bs-* attributes
+                        var enrollment = button.getAttribute('data-bs-whatever')
+                        console.log('enrollment id : ' + enrollment)
+        
+                        // Update the modal's content.
+                        var modalTitle = exampleModal.querySelector('.modal-body')
+                        
+                        // Update the input hidden value with event id                
+                        var modalInputHidden = exampleModal.querySelector('#theEnrollmentId')
+                        modalInputHidden.value = enrollment;
+                        console.log(modalInputHidden);
+        
+                        modalTitle.textContent = 'Enrollment id : ' + enrollment
+                        
+                    })            
+                </script>   
 {% endblock %}

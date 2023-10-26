@@ -70,7 +70,7 @@ def event(event_id=0):
                 db.session.delete(event_to_delete)
                 db.session.commit()
             return redirect('/user-events')
-        elif event_id != 0:
+        elif event_id != 0: 
             print('je update')
             form = Event.query.get(event_id)
             # myDate = datetime.utcnow() working 
@@ -78,8 +78,9 @@ def event(event_id=0):
 
             print(request.form)
             form.title = (request.form['title'])
-            form.date = datetime.strptime('2023-10-23','%Y-%m-%d') 
+            form.date = datetime.strptime((request.form['date']), '%Y-%m-%d')
             print(request.form['title'])
+
             db.session.commit()
 
 
@@ -102,7 +103,20 @@ def event(event_id=0):
             ).first()
             form.title.data = currentEvent.title
             print(currentEvent)
-        
+            print(currentEvent.date)
+
+            form.date.data = currentEvent.date
+            # form.date.data = datetime.strftime('2011-03-07','%Y-%m-%d')
+            # form.date.data = datetime.date(2011, 3, 7) not working!
+            # form.date.data = datetime.strptime(datetime.date(2011, 3, 7)) NOT WORKING
+            # formatted_date = currentEvent.date.strftime('%Y-%m-%d')
+            # print(formatted_date)
+            # form.date.data = formatted_date
+
+
+            # form.date.data = '2023-10-01' not working!
+            # form.date.data = datetime.strptime((currentEvent.date), '%Y-%m-%d') not working!
+            # TODO fix date
 
         return render_template('event.html',appName=appName, appTitle=appTitle, appSlogan=appSlogan, form=form)
 
@@ -267,3 +281,11 @@ def user(username):
         {'author': user, 'body': 'Test post #2'}
     ]
     return render_template('user.html', user=user, posts=posts)
+
+
+
+@app.route('/enrollment', methods=['POST', 'GET'])
+@app.route('/enrollment/<enrollment_id>', methods=['POST', 'GET'])
+@login_required
+def enrollment(enrolment_id=0):
+    return('123')
