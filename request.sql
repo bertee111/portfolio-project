@@ -27,7 +27,7 @@ delete * from event
 delete  from enrollment where id
 
 PRAGMA foreign_keys=1;
-insert into enrollment (user_id, event_id, date) values (2,24,'2023-10-23');
+insert into enrollment (user_id, event_id, date) values (2,28,'2023-10-23');
 
 
 select e.id, e.title, e.date, u.id, u.username as owner, er.user_id as enroler, uer.username

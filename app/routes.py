@@ -62,13 +62,14 @@ def event(event_id=0):
             print('je delete')
             event_id_to_delete = form_data['theEventId']
             event_to_delete = Event.query.filter(Event.id == event_id_to_delete).first()
-            db.session.delete(event_to_delete)
-            db.session.commit()
+            # db.session.delete(event_to_delete)
+            # db.session.commit()
             enrollments_to_delete = Enrollment.query.filter(Enrollment.event_id == event_id_to_delete ).all()
             for enrollment in enrollments_to_delete:
                 db.session.delete(enrollment)
-                db.session.delete(event_to_delete)
                 db.session.commit()
+            db.session.delete(event_to_delete)
+            db.session.commit()
             return redirect('/user-events')
         elif event_id != 0: 
             print('je update')
@@ -102,10 +103,12 @@ def event(event_id=0):
             Event.id == event_id
             ).first()
             form.title.data = currentEvent.title
+            form.date.data = currentEvent.date
             print(currentEvent)
             print(currentEvent.date)
+            
 
-            form.date.data = currentEvent.date
+            # form.date.data = currentEvent.date
             # form.date.data = datetime.strftime('2011-03-07','%Y-%m-%d')
             # form.date.data = datetime.date(2011, 3, 7) not working!
             # form.date.data = datetime.strptime(datetime.date(2011, 3, 7)) NOT WORKING
@@ -287,5 +290,14 @@ def user(username):
 @app.route('/enrollment', methods=['POST', 'GET'])
 @app.route('/enrollment/<enrollment_id>', methods=['POST', 'GET'])
 @login_required
-def enrollment(enrolment_id=0):
-    return('123')
+def enrollment():
+    form_data = request.form
+    print(form_data)
+    if request.method == 'POST':
+        if form_data['enrollmentMethod'] == 'delete':
+            print('je delete')
+            enrollment_id_to_delete = form_data['theEnrollmentId']
+            enrollment_to_delete = Enrollment.query.filter(Enrollment.id == enrollment_id_to_delete).first()
+            db.session.delete(enrollment_to_delete)
+            db.session.commit()
+            return redirect('/user-enrollments')
