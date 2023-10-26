@@ -42,6 +42,11 @@ class Event(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id', name='fk_event_user'), nullable=False)
     title = db.Column(db.String(255), nullable=False)
     date = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+
+    # def __init__(self, user_id, title, date):
+    #     self.user_id = user_id
+    #     self.title = title
+    #     self.date = date
     
     def __repr__(self):
         return '<Event {}>'.format(self.title)
