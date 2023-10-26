@@ -71,8 +71,12 @@ def event(event_id=0):
         elif event_id != 0:
             print('je update')
             form = Event.query.get(event_id)
+            # myDate = datetime.utcnow() working 
+            # myDate = '2023-10-23' not working 
+
             print(request.form)
             form.title = (request.form['title'])
+            form.date = datetime.strptime('2023-10-23','%Y-%m-%d') 
             print(request.form['title'])
             db.session.commit()
 
