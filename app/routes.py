@@ -301,3 +301,37 @@ def enrollment():
             db.session.delete(enrollment_to_delete)
             db.session.commit()
             return redirect('/user-enrollments')
+        # elif form_data['enrollmentMethod'] == 'something else':
+            
+
+
+@app.route('/all-events', methods=['GET', 'POST', 'UPDATE'])
+@login_required
+def allEvents():
+    global appName, appSlogan, appTitle, db
+    
+    allEvents = db.session.query(
+        Event.user_id,
+        Event.id,
+        User.username.label("owner"),
+        Event.date,
+        Event.title,        
+        func.count(Enrollment.user_id).label('participants')
+    ).outerjoin(User, Event.user_id == User.id
+    ).outerjoin(Enrollment, Event.id == Enrollment.event_id
+    ).group_by(
+        Event.user_id,
+        Event.date,
+        Event.title
+    ).order_by(
+         func.count(Enrollment.user_id).label('participants').desc(),
+         Event.title
+    ).all()
+
+    return render_template(
+        'all-events.html', 
+        appName=appName, 
+        appTitle=appTitle, 
+        appSlogan=appSlogan, 
+        allEvents=allEvents 
+    ) 

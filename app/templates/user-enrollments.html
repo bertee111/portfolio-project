@@ -1,7 +1,7 @@
 {% extends "home.html" %}
 
 {% block content %}
-    <h2>My enrollments : <button type="button" class="btn btn-primary btn-sm">Add</button></h2>    
+    <h2>My enrollments :<a href="{{ url_for('allEvents') }}" class="btn btn-primary btn-sm active" role="button" aria-pressed="true">Add</button></a></h2>    
 
         <table class="table table-dark table-hover table-striped">
             <thead>
@@ -21,7 +21,7 @@
                         <td>{{ enrollment.owner }}</td>
                         <td><a href="{{ url_for('eventEnrollments') }}/{{enrollment.eventId}}" aria-pressed="true">{{ enrollment.participants }}</a></td>
                         <td>                            
-                            <a href="{{ url_for('index') }}" class="btn btn-primary btn-sm active" role="button" aria-pressed="true">Delete</a>
+                            <!---<a href="{{ url_for('index') }}" class="btn btn-primary btn-sm active" role="button" aria-pressed="true">Delete</a>-->
                             <a href="{{ url_for('index') }}" class="btn btn-primary btn-sm active" role="button" aria-pressed="true" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="{{enrollment.id}}" >Delete {{ enrollment.id }}</a>
 
                         </td>

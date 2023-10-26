@@ -1,0 +1,39 @@
+{% extends "home.html" %}
+
+{% block content %}
+    <h2>All events :</h2>
+   
+
+        <table class="table table-dark table-hover table-striped">
+            <thead>
+            <tr>
+                <th>Event</th>
+                <th>Owner</th>
+                <th>Date</th>
+                <th>Participants</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+                {% for event in allEvents %}
+                    <tr>
+                        <td>{{ event.title }}</td>
+                        <td>{{ event.owner }}</td>
+                        <td>{{ event.date }}</td>
+                        {% if event.participants > 0 %}
+                        <td><a href="{{ url_for('eventEnrollments') }}/{{event.id}}" aria-pressed="true">{{ event.participants }}</a></td>
+                        {% else %}
+                        <td>{{ event.participants }}</td>
+                    {% endif %}                        
+                        <td>
+                            <a href="{{ url_for('eventEnrollments') }}/{{event.id}}" class="btn btn-primary btn-sm active" role="button" aria-pressed="true">Join</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+
+
+
+{% endblock %}
