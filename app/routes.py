@@ -44,12 +44,14 @@ def event(event_id=0):
     global appName, appSlogan, appTitle, db
     form = EventForm()
     form_data = request.form
-    print(request)
+    print(request)  
 
     if request.method == 'POST':
         if event_id == 0 and form_data['eventMethod'] != 'delete':
+            # date_object = datetime.strptime((request.form['date']), '%Y-%m-%d')
+
             print('je insert')
-            new_event = Event(title=form.title.data, date=form.date.data, user_id=current_user.id)
+            new_event = Event(title=form.title.data, date=datetime.strptime((request.form['date']), '%Y-%m-%d'), user_id=current_user.id)
             db.session.add(new_event)
             db.session.commit()
             flash('Event created successfully!', 'success')
