@@ -29,5 +29,5 @@ class RegistrationForm(FlaskForm):
         
 class EventForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
-    date = DateField('Start Date', format='%m/%d/%Y', validators=(validators.Optional(),))
+    date = DateField('Event Date', format='%m/%d/%Y', validators=[DataRequired()])
     submit = SubmitField('Created')

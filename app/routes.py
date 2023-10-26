@@ -288,11 +288,17 @@ def user(username):
 
 
 @app.route('/enrollment', methods=['POST', 'GET'])
-@app.route('/enrollment/<enrollment_id>', methods=['POST', 'GET'])
+# @app.route('/enrollment/<event_id>', methods=['POST', 'GET'])
 @login_required
 def enrollment():
     form_data = request.form
-    print(form_data)
+    # print(form_data)
+    # print('patate')
+    # print(form_data['theEventId'])
+    # print(request.method)
+    # print(form_data.theEventId)
+    # return redirect('/user-enrollments')
+
     if request.method == 'POST':
         if form_data['enrollmentMethod'] == 'delete':
             print('je delete')
@@ -301,8 +307,13 @@ def enrollment():
             db.session.delete(enrollment_to_delete)
             db.session.commit()
             return redirect('/user-enrollments')
-        # elif form_data['enrollmentMethod'] == 'something else':
-            
+        elif form_data['enrollmentMethod'] == 'insert':
+            print('je insert')
+            new_enrollment = Enrollment(user_id=current_user.id, event_id=form_data['theEventId'])
+            db.session.add(new_enrollment)
+            db.session.commit()
+            return redirect('/user-enrollments')
+
 
 
 @app.route('/all-events', methods=['GET', 'POST', 'UPDATE'])

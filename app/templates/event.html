@@ -21,7 +21,15 @@
 
     <button type="submit" name="submit" class="btn btn-primary" value="Sign In">Save</button>
 </form>
-
+<script>
+    function myFunction() {
+      formDate = "{{ form.date.data }}"
+      cleanDate = formDate.split(" ")[0]
+      document.getElementById("date").value = cleanDate;
+      
+    }
+    myFunction();
+</script>
 
 
 
