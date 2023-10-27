@@ -5,15 +5,15 @@ from app import app, db
 from app.forms import LoginForm, RegistrationForm, EventForm
 from app.models import User, Event, Enrollment
 from sqlalchemy import func
-from sqlalchemy.sql import alias
+from sqlalchemy.sql import alias, and_
 import sqlite3
 from wtforms.fields import DateField
 from datetime import timedelta, date, time, datetime
 
 
-appName = 'TVINING'
+appName = 'Event Connect!'
 appTitle = 'Welcome to ' + appName
-appSlogan = 'A simple way to join with activities'
+appSlogan = 'A simple way to join and create with activities'
 
 
 @app.route('/')
@@ -320,20 +320,23 @@ def enrollment():
 @login_required
 def allEvents():
     global appName, appSlogan, appTitle, db
-    
+    userEnrollmentsAlias = alias(Enrollment)
     allEvents = db.session.query(
         Event.user_id,
         Event.id,
         User.username.label("owner"),
         Event.date,
         Event.title,        
+        userEnrollmentsAlias.c.user_id.label('can_join'),        
         func.count(Enrollment.user_id).label('participants')
     ).outerjoin(User, Event.user_id == User.id
     ).outerjoin(Enrollment, Event.id == Enrollment.event_id
+    ).outerjoin(userEnrollmentsAlias, and_(userEnrollmentsAlias.c.user_id == current_user.id, Event.id == userEnrollmentsAlias.c.event_id)
     ).group_by(
         Event.user_id,
         Event.date,
-        Event.title
+        Event.title,
+        userEnrollmentsAlias.c.user_id
     ).order_by(
          func.count(Enrollment.user_id).label('participants').desc(),
          Event.title

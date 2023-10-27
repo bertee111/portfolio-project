@@ -29,7 +29,11 @@
                             <form method="POST" action="{{ url_for('enrollment')}}">
                                 <input type="hidden" name="theEventId" value="{{ event.id }}">
                                 <input type="hidden" name="enrollmentMethod" value="insert">
+                                {% if event.can_join == None %}                                
                                 <button type="submit" class="btn btn-primary btn-sm active" role="button" aria-pressed="true">Join</button>
+                                {% else %}
+                                <button type="submit" class="btn btn-primary btn-sm disabled" role="button" aria-pressed="true">---</button>
+                                {% endif %}
                             </form>
                             <!--<a href="{{ url_for('userEnrollments') }}" class="btn btn-primary btn-sm active" role="button" aria-pressed="true">Join</a>-->
 
