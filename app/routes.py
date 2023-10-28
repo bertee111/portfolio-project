@@ -13,7 +13,7 @@ from datetime import timedelta, date, time, datetime
 
 appName = 'Event Connect!'
 appTitle = 'Welcome to ' + appName
-appSlogan = 'A simple way to join and create with activities'
+appSlogan = 'A simple way to join and create activities'
 
 
 @app.route('/')
