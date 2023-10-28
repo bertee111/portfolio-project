@@ -50,7 +50,7 @@ try:
                 {"user_id": 3, "event_id": 6, "date": datetime.today()},
                 {"user_id": 1, "event_id": 2, "date": datetime.today()},
                 {"user_id": 2, "event_id": 4, "date": datetime.today()},
-                {"user_id": 1, "event_id": 3, "date": datetime.today()}                
+                {"user_id": 1, "event_id": 3, "date": datetime.today()}                   
             ]
         )
         db.session.commit()
